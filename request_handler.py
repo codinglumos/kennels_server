@@ -3,11 +3,11 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_animals
 from views.animal_requests import create_animal, delete_animal, get_single_animal, update_animal
 from views import get_all_locations
-from views.location_requests import create_location, delete_location, get_single_location
+from views.location_requests import create_location, delete_location, get_single_location, update_location
 from views import get_all_employees
-from views.employee_requests import create_employee, delete_employee, get_single_employee
+from views.employee_requests import create_employee, delete_employee, get_single_employee, update_employee
 from views import get_all_customers
-from views.customer_requests import create_customer, delete_customer, get_single_customer
+from views.customer_requests import create_customer, delete_customer, get_single_customer, update_customer
 
 
 # Here's a class. It inherits from another class.
@@ -143,16 +143,30 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
-
-    # Parse the URL
-    (resource, id) = self.parse_url(self.path)
+   # Parse the URL
+        (resource, id) = self.parse_url(self.path)
 
     # Delete a single animal from the list
-    if resource == "animals":
-        update_animal(id, post_body)
+        if resource == "animals":
+            update_animal(id, post_body)
 
     # Encode the new animal and send in response
-    self.wfile.write("".encode())
+        self.wfile.write("".encode())
+
+        if resource == "customers":
+            update_customer(id, post_body)
+
+        self.wfile.write("".encode())
+
+        if resource == "employees":
+            update_employee(id, post_body)
+
+        self.wfile.write("".encode())
+
+        if resource == "locations":
+            update_location(id, post_body)
+
+        self.wfile.write("".encode())
 
     def _set_headers(self, status):
         # Notice this Docstring also includes information about the arguments passed to the function
