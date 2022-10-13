@@ -1,13 +1,52 @@
+import sqlite3
+
+from views.models.employee import Employee
+
+
 EMPLOYEES = [
     {
         "id": 1,
-        "name": "Jenna Solis"
+        "name": "Jenna Solis",
     }
 ]
 
 
 def get_all_employees():
-    return EMPLOYEES
+        # Open a connection to the database
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+
+        # Just use these. It's a Black Box.
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.location_id
+        FROM employee a
+        """)
+
+        # Initialize an empty list to hold all animal representations
+        employees = []
+
+        # Convert rows of data into a Python list
+        dataset = db_cursor.fetchall()
+
+        # Iterate list of data returned from database
+        for row in dataset:
+
+            # Create an animal instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Animal class above.
+            employee = Employee(row['id'], row['name'], row['address'], row['location_id'])
+
+            employees.append(employee.__dict__)
+
+    return employees
 
 # Function with a single parameter
 
@@ -43,19 +82,13 @@ def create_employee(employee):
     return employee
 
 def delete_employee(id):
-    # Initial -1 value for employee index, in case one isn't found
-    employee_index = -1
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    # Iterate the employeeS list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, employee in enumerate(EMPLOYEES):
-        if employee["id"] == id:
-            # Found the employee. Store the current index.
-            employee_index = index
-
-    # If the animal was found, use pop(int) to remove it from list
-    if employee_index >= 0:
-        EMPLOYEES.pop(employee_index)
+        db_cursor.execute("""
+        DELETE FROM employee
+        WHERE id = ?
+        """, (id, ))
 
 def update_employee(id, new_employee):
     # Iterate the employeeS list, but use enumerate() so that
@@ -65,3 +98,29 @@ def update_employee(id, new_employee):
             # Found the animal. Update the value.
             EMPLOYEES[index] = new_employee
             break
+
+def get_employees_by_location(location_id):
+
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        select
+            a.id,
+            a.name,
+            a.address,
+            a.location_id
+        from employee a
+        WHERE a.location_id = ?
+        """, ( location_id, ))
+
+        employees = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(row['id'], row['name'], row['address'], row['location_id'])
+            employees.append(employee.__dict__)
+
+    return employees

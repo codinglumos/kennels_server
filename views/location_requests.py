@@ -1,3 +1,8 @@
+import sqlite3
+
+from views.models.location import Location
+
+
 LOCATIONS = [
     {
         "id": 1,
@@ -13,7 +18,40 @@ LOCATIONS = [
 
 
 def get_all_locations():
-    return LOCATIONS
+          # Open a connection to the database
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+
+        # Just use these. It's a Black Box.
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+        FROM location a
+        """)
+
+        # Initialize an empty list to hold all animal representations
+        locations = []
+
+        # Convert rows of data into a Python list
+        dataset = db_cursor.fetchall()
+
+        # Iterate list of data returned from database
+        for row in dataset:
+
+            # Create an animal instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Animal class above.
+            location = Location(row['id'], row['name'], row['address'])
+
+            locations.append(location.__dict__)
+
+    return locations
 
 # Function with a single parameter
 
@@ -49,19 +87,13 @@ def create_location(location):
     return location
 
 def delete_location(id):
-    # Initial -1 value for location index, in case one isn't found
-    location_index = -1
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
 
-    # Iterate the employeeS list, but use enumerate() so that you
-    # can access the index value of each item
-    for index, location in enumerate(LOCATIONS):
-        if location["id"] == id:
-            # Found the location. Store the current index.
-            location_index = index
-
-    # If the animal was found, use pop(int) to remove it from list
-    if location_index >= 0:
-        LOCATIONS.pop(location_index)
+        db_cursor.execute("""
+        DELETE FROM location
+        WHERE id = ?
+        """, (id, ))
 
 def update_location(id, new_location):
     # Iterate the locationS list, but use enumerate() so that
