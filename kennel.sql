@@ -49,6 +49,8 @@ INSERT INTO `Customer` VALUES (null, "Bryan Nilsen", "500 Internal Error Blvd", 
 INSERT INTO `Customer` VALUES (null, "Jenna Solis", "301 Redirect Ave", "jenna@solis.com", "password");
 INSERT INTO `Customer` VALUES (null, "Emily Lemmon", "454 Mulberry Way", "emily@lemmon.com", "password");
 
+DELETE FROM location
+        WHERE id > 2
 
 
 INSERT INTO `Animal` VALUES (null, "Snickers", "Recreation", "Dalmation", 4, 1);

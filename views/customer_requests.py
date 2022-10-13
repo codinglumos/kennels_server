@@ -1,5 +1,5 @@
 import sqlite3
-
+import json
 from views.models.customer import Customer
 
 
@@ -24,6 +24,9 @@ def get_all_customers():
         SELECT
             a.id,
             a.name,
+            a.address,
+            a.email,
+            a.password
         FROM customer a
         """)
 

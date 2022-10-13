@@ -55,24 +55,24 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "animals":
                 if id is not None:
-                    response = f"{get_single_animal(id)}"
+                    response = get_single_animal(id)
                 else:
-                    response = f"{get_all_animals()}"
+                    response = get_all_animals()
             elif resource == "customers":
                 if id is not None:
-                    response = f"{get_single_customer(id)}"
+                    response = get_single_customer(id)
                 else:
-                    response = f"{get_all_customers()}"
+                    response = get_all_customers()
             elif resource == "employees":
                 if id is not None:
-                    response = f"{get_single_employee(id)}"
+                    response = get_single_employee(id)
                 else:
-                    response = f"{get_all_employees()}"
+                    response = get_all_employees()
             elif resource == "locations":
                 if id is not None:
-                    response = f"{get_single_location(id)}"
+                    response = get_single_location(id)
                 else:
-                    response = f"{get_all_locations()}"
+                    response = get_all_locations()
 
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
@@ -81,19 +81,13 @@ class HandleRequests(BaseHTTPRequestHandler):
             if query.get('email') and resource == 'customers':
                 response = get_customers_by_email(query['email'][0])
 
-        self.wfile.write(json.dumps(response).encode())
-
-        if query.get('location_id') and resource == 'animals':
+            if query.get('location_id') and resource == 'animals':
                 response = get_animals_by_location(query['location_id'][0])
 
-        self.wfile.write(json.dumps(response).encode())
-
-        if query.get('location_id') and resource == 'employees':
+            if query.get('location_id') and resource == 'employees':
                 response = get_employees_by_location(query['location_id'][0])
 
-        self.wfile.write(json.dumps(response).encode())
-
-        if query.get('status') and resource == 'animals':
+            if query.get('status') and resource == 'animals':
                 response = get_animals_by_status(query['status'][0])
 
         self.wfile.write(json.dumps(response).encode())
@@ -162,17 +156,17 @@ class HandleRequests(BaseHTTPRequestHandler):
             update_animal(id, post_body)
 
     # Encode the new animal and send in response
-        self.wfile.write("".encode())
+        #self.wfile.write("".encode())
 
         if resource == "customers":
             update_customer(id, post_body)
 
-        self.wfile.write("".encode())
+        #self.wfile.write("".encode())
 
         if resource == "employees":
             update_employee(id, post_body)
 
-        self.wfile.write("".encode())
+        #self.wfile.write("".encode())
 
         if resource == "locations":
             update_location(id, post_body)

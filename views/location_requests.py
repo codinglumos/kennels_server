@@ -1,5 +1,5 @@
 import sqlite3
-
+import json
 from views.models.location import Location
 
 
@@ -18,7 +18,7 @@ LOCATIONS = [
 
 
 def get_all_locations():
-          # Open a connection to the database
+    # Open a connection to the database
     with sqlite3.connect("./kennel.sqlite3") as conn:
 
         # Just use these. It's a Black Box.
@@ -30,7 +30,7 @@ def get_all_locations():
         SELECT
             a.id,
             a.name,
-            a.address,
+            a.address
         FROM location a
         """)
 
@@ -70,6 +70,7 @@ def get_single_location(id):
 
     return requested_location
 
+
 def create_location(location):
     # Get the id value of the last location in the list
     max_id = LOCATIONS[-1]["id"]
@@ -86,6 +87,7 @@ def create_location(location):
     # Return the dictionary with `id` property added
     return location
 
+
 def delete_location(id):
     with sqlite3.connect("./kennel.sqlite3") as conn:
         db_cursor = conn.cursor()
@@ -94,6 +96,7 @@ def delete_location(id):
         DELETE FROM location
         WHERE id = ?
         """, (id, ))
+
 
 def update_location(id, new_location):
     # Iterate the locationS list, but use enumerate() so that

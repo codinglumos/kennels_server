@@ -63,7 +63,7 @@ def get_all_animals():
             # Note that the database fields are specified in
             # exact order of the parameters defined in the
             # Animal class above.
-            animal = Animal(row['id'], row['name'], row['breed'],row['status'],
+            animal = Animal(row['id'], row['name'], row['breed'], row['status'],
                             row['customer_id'], row['location_id'])
 
             animals.append(animal.__dict__)
@@ -114,6 +114,7 @@ def delete_animal(id):
         WHERE id = ?
         """, (id, ))
 
+
 def update_animal(id, new_animal):
     # Iterate the ANIMALS list, but use enumerate() so that
     # you can access the index value of each item.
@@ -122,6 +123,7 @@ def update_animal(id, new_animal):
             # Found the animal. Update the value.
             ANIMALS[index] = new_animal
             break
+
 
 def get_animals_by_location(location_id):
 
@@ -140,16 +142,18 @@ def get_animals_by_location(location_id):
             a.location_id
         from Animal a
         WHERE a.location_id = ?
-        """, ( location_id, ))
+        """, (location_id, ))
 
         animals = []
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            animal = Animal(row['id'], row['name'], row['breed'], row['status'], row['customer_id'], row['location_id'])
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['customer_id'], row['location_id'])
             animals.append(animal.__dict__)
 
     return animals
+
 
 def get_animals_by_status(status):
 
@@ -168,13 +172,14 @@ def get_animals_by_status(status):
             a.location_id
         from Animal a
         WHERE a.status = ?
-        """, ( status, ))
+        """, (status, ))
 
         animals = []
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            animal = Animal(row['id'], row['name'], row['breed'], row['status'], row['customer_id'], row['location_id'])
+            animal = Animal(row['id'], row['name'], row['breed'],
+                            row['status'], row['customer_id'], row['location_id'])
             animals.append(animal.__dict__)
 
     return animals
